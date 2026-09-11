@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>С днём рождения, Маргреета! 💖</title>
+<title>Happy Birthday, Margreeta! 💖</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -12,9 +12,12 @@
     font-family:"Trebuchet MS",system-ui,sans-serif;
     color:#4a3150;
     background:linear-gradient(135deg,#fff1f8 0%,#f4edff 48%,#e9f7ff 100%);
+    background-size:200% 200%;
+    animation:bgshift 18s ease-in-out infinite;
     overflow-x:hidden;
     cursor:none;
   }
+  @keyframes bgshift{0%,100%{background-position:0% 0%}50%{background-position:100% 100%}}
   button{font:inherit}
   a{color:inherit}
 
@@ -46,6 +49,20 @@
   .bubble:nth-child(3){width:70px;height:70px;background:#cceeff;left:14%;bottom:10%;animation-delay:4s}
   .bubble:nth-child(4){width:110px;height:110px;background:#ffe4b8;right:14%;bottom:7%;animation-delay:1s}
   @keyframes float{50%{transform:translateY(-25px) scale(1.06)}}
+
+  /* snowfall — a little wink to Russia */
+  .snowlayer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+  .flake{position:absolute;top:-5vh;color:#fff;text-shadow:0 0 6px rgba(200,190,255,.6);
+    animation-name:snowfall;animation-timing-function:linear;animation-iteration-count:infinite;}
+  @keyframes snowfall{
+    0%{transform:translate(0,0) rotate(0deg);opacity:.9}
+    100%{transform:translate(var(--drift,20px),115vh) rotate(360deg);opacity:.5}
+  }
+
+  /* twinkling stars */
+  .starlayer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle 2.6s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.9;transform:scale(1.5)}}
 
   .balloon{
     position:absolute;bottom:-140px;font-size:2.6rem;opacity:0;
@@ -83,6 +100,7 @@
     transition:.25s;
   }
   .btn:hover{transform:translateY(-3px) scale(1.03)}
+  .btn:disabled{cursor:default}
   .hint{margin-top:16px;font-size:.85rem;color:#997f9d}
 
   .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
@@ -93,6 +111,7 @@
     border:2px solid rgba(255,255,255,.9);border-radius:30px;
     padding:38px;box-shadow:0 20px 60px rgba(91,61,105,.12);
     backdrop-filter:blur(10px);
+    position:relative;
   }
   .title{text-align:center;font-size:clamp(2rem,6vw,3.6rem);color:#7654a5;margin-bottom:16px}
   .intro{text-align:center;line-height:1.8;font-size:1.08rem}
@@ -107,7 +126,7 @@
   }
   .note:hover{transform:translateY(-7px) rotate(-1deg)}
   .note:nth-child(2):hover{transform:translateY(-7px) rotate(1deg)}
-  .note-inner{transition:transform .6s cubic-bezier(.3,.7,.3,1.2)}
+  .note-inner{transition:transform .6s cubic-bezier(.3,.7,.3,1.2);position:relative}
   .note.flipped .note-inner{transform:rotateY(180deg)}
   .note-front,.note-back{backface-visibility:hidden}
   .note-back{
@@ -115,7 +134,6 @@
     display:flex;align-items:center;justify-content:center;
     font-size:.92rem;line-height:1.55;color:#7654a5;font-weight:700;
   }
-  .note-inner{position:relative}
   .emoji{font-size:3rem;margin-bottom:12px}
   .note h3{color:#d45b91;margin-bottom:9px}
   .note p{line-height:1.55;font-size:.95rem}
@@ -124,12 +142,25 @@
   /* candle wish section */
   .candle-wrap{display:flex;flex-direction:column;align-items:center}
   .cake{font-size:5.5rem;position:relative;display:inline-block}
+  .flame-glow{
+    position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+    width:46px;height:46px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,200,100,.65),rgba(255,150,60,0) 70%);
+    filter:blur(2px);animation:glowpulse 1.2s ease-in-out infinite;transition:opacity .5s ease;
+  }
+  @keyframes glowpulse{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.25)}}
   .flame-emoji{
     position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:1.6rem;
     animation:flick 1.2s ease-in-out infinite;transition:opacity .5s ease,transform .5s ease;
   }
   @keyframes flick{0%,100%{transform:translateX(-50%) scale(1) rotate(-4deg)}50%{transform:translateX(-50%) scale(1.15) rotate(4deg)}}
-  .flame-emoji.out{opacity:0;transform:translateX(-50%) translateY(-16px) scale(.2)}
+  .flame-emoji.out,.flame-glow.out{opacity:0;transform:translateX(-50%) translateY(-16px) scale(.2)}
+  .smoke{position:absolute;top:-10px;left:50%;font-size:1rem;opacity:0;pointer-events:none}
+  .smoke.go{animation:smokeup 1.8s ease-out forwards}
+  @keyframes smokeup{
+    0%{opacity:.7;transform:translate(-50%,0) scale(.6)}
+    100%{opacity:0;transform:translate(calc(-50% + var(--sx,0px)),-70px) scale(1.4)}
+  }
   .wish-text{margin-top:22px;font-size:1.1rem;color:#a45c83;font-weight:700;min-height:1.6em;opacity:0;transition:opacity .6s ease}
   .wish-text.show{opacity:1}
 
@@ -137,6 +168,7 @@
   .gift{font-size:8rem;cursor:pointer;filter:drop-shadow(0 14px 10px rgba(80,50,90,.12));transition:.3s;display:inline-block}
   .gift:hover{transform:translateY(-10px) rotate(4deg)}
   .gift.shake{animation:shake .5s ease}
+  .gift.opened{animation:popaway .5s ease forwards}
   @keyframes shake{
     0%,100%{transform:rotate(0)}
     20%{transform:rotate(-8deg)}
@@ -144,17 +176,29 @@
     60%{transform:rotate(-6deg)}
     80%{transform:rotate(6deg)}
   }
+  @keyframes popaway{to{transform:scale(0) rotate(20deg);opacity:0}}
   .surprise{display:none;margin:22px auto 0;max-width:650px;animation:reveal .6s ease}
   .surprise.show{display:block}
   @keyframes reveal{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
   .surprise h2{font-size:2rem;color:#e85b9b;margin-bottom:12px}
   .surprise p{line-height:1.8}
+  .cat-wrap{margin:6px auto 18px;max-width:230px;animation:catpop .7s cubic-bezier(.2,.9,.3,1.3)}
+  @keyframes catpop{from{transform:scale(.4) rotate(-8deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+  .cat-tail{transform-origin:60px 190px;animation:tailwag 2.4s ease-in-out infinite}
+  @keyframes tailwag{0%,100%{transform:rotate(0deg)}50%{transform:rotate(8deg)}}
+  .cat-wrap:hover .cat-tail{animation-duration:.5s}
 
   footer{text-align:center;padding:35px 20px;color:#947e99;font-size:.9rem}
   .heart{position:fixed;bottom:-30px;font-size:22px;pointer-events:none;z-index:10;animation:rise 4s linear forwards}
   @keyframes rise{to{transform:translateY(-110vh) rotate(360deg);opacity:0}}
   .confetti{position:fixed;width:9px;height:14px;top:-20px;z-index:20;pointer-events:none;animation:fall 3s linear forwards}
   @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+  .firework{position:fixed;width:7px;height:7px;border-radius:50%;z-index:21;pointer-events:none;
+    left:var(--fx);top:var(--fy);animation:fw 1s ease-out forwards}
+  @keyframes fw{
+    0%{transform:translate(0,0) scale(1);opacity:1}
+    100%{transform:translate(var(--tx),var(--ty)) scale(.3);opacity:0}
+  }
 
   @media(max-width:700px){
     body{cursor:auto}
@@ -168,83 +212,42 @@
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   }
-
-  /* ===== time lock overlay ===== */
-  #lockOverlay{
-    position:fixed;inset:0;z-index:99999;
-    display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg,#fff1f8 0%,#f4edff 48%,#e9f7ff 100%);
-    text-align:center;padding:20px;
-  }
-  #lockOverlay .lockCard{
-    background:rgba(255,255,255,.85);border:2px solid rgba(255,255,255,.9);
-    border-radius:26px;padding:40px 30px;max-width:480px;width:100%;
-    box-shadow:0 20px 60px rgba(91,61,105,.14);backdrop-filter:blur(10px);
-  }
-  #lockOverlay .lockEmoji{font-size:3rem;margin-bottom:10px}
-  #lockOverlay h2{color:#e85b9b;font-size:clamp(1.3rem,5vw,1.8rem);margin-bottom:10px}
-  #lockOverlay p{color:#7654a5;font-size:.95rem;margin-bottom:20px;line-height:1.6}
-  #lockTimer{
-    display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
-  }
-  #lockTimer .unit{min-width:64px}
-  #lockTimer .num{
-    font-size:clamp(1.6rem,6vw,2.4rem);font-weight:800;color:#e85b9b;
-    background:#fff;border-radius:14px;padding:10px 6px;
-    box-shadow:0 8px 18px rgba(232,91,155,.18);display:block;
-  }
-  #lockTimer .lbl{display:block;margin-top:6px;font-size:.72rem;letter-spacing:1px;
-    text-transform:uppercase;color:#9b6fa1}
-  .page-hidden{display:none!important}
 </style>
 </head>
 <body>
-
-<div id="lockOverlay">
-  <div class="lockCard">
-    <div class="lockEmoji">🔒🎂</div>
-    <h2>Ещё чуть-чуть...</h2>
-    <p>Сюрприз откроется автоматически:<br>11 сентября 2026, 00:00</p>
-    <div id="lockTimer">
-      <div class="unit"><span class="num" id="lockDays">00</span><span class="lbl">дни</span></div>
-      <div class="unit"><span class="num" id="lockHours">00</span><span class="lbl">часы</span></div>
-      <div class="unit"><span class="num" id="lockMinutes">00</span><span class="lbl">мин</span></div>
-      <div class="unit"><span class="num" id="lockSeconds">00</span><span class="lbl">сек</span></div>
-    </div>
-  </div>
-</div>
-
 <div class="cursor-dot" id="cursorDot"></div>
-<div class="sky page-hidden" id="sky">
+<div class="starlayer" id="starlayer"></div>
+<div class="snowlayer" id="snowlayer"></div>
+<div class="sky" id="sky">
   <span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span>
 </div>
 
-<main class="page page-hidden" id="mainPage">
+<main class="page">
 <section class="hero">
   <div>
-    <div class="mini">Маленький сюрприз из Индии 🇮🇳 → 🇷🇺</div>
-    <h1>С днём рождения,<br>Маргреета! 🎂</h1>
+    <div class="mini">A tiny surprise from India 🇮🇳 → 🇷🇺</div>
+    <h1>Happy Birthday,<br>Margreeta! 🎂</h1>
     <p id="typewriteTarget" class="typewrite"></p>
-    <button class="btn" onclick="document.getElementById('candle').scrollIntoView()">Открыть сюрприз ✨</button>
-    <div class="hint">Ниже тебя ждут несколько маленьких сюрпризов ↓</div>
+    <button class="btn" onclick="document.getElementById('candle').scrollIntoView({behavior:'smooth'})">Open your surprise ✨</button>
+    <div class="hint">There are a few little surprises waiting below ↓</div>
   </div>
 </section>
 
 <section id="candle">
   <div class="card reveal">
-    <h2 class="title" style="font-size:clamp(1.6rem,5vw,2.4rem)">Сначала загадай желание 🕯️</h2>
-    <p class="intro">Задуй свечку, прежде чем листать дальше.</p>
+    <h2 class="title" style="font-size:clamp(1.6rem,5vw,2.4rem)">Make a wish first 🕯️</h2>
+    <p class="intro">Blow out the candle before you scroll any further.</p>
     <div class="candle-wrap" style="margin-top:26px">
-      <div class="cake">🎂<span class="flame-emoji" id="flameEmoji">🔥</span></div>
-      <button class="btn" id="blowBtn" style="margin-top:26px">Задуть свечку</button>
-      <div class="wish-text" id="wishText">Желание загадано — пусть оно сбудется. 💫</div>
+      <div class="cake">🎂<span class="flame-glow" id="flameGlow"></span><span class="flame-emoji" id="flameEmoji">🔥</span><span class="smoke" id="smoke1">💨</span><span class="smoke" id="smoke2">💨</span></div>
+      <button class="btn" id="blowBtn" style="margin-top:26px">Blow the candle</button>
+      <div class="wish-text" id="wishText">Wish made — sending it your way. 💫</div>
     </div>
   </div>
 </section>
 
 <section id="message">
   <div class="card reveal">
-    <h2 class="title">Для замечательного друга 🌷</h2>
+    <h2 class="title">For a wonderful friend 🌷</h2>
     <p class="intro">
       Happy Birthday, Margreeta! I hope your new year is filled with
       laughter, peaceful days, exciting adventures, and lots of little
@@ -272,7 +275,7 @@
           <div class="note-front">
             <div class="emoji">🧸</div>
             <h3>Оставайся собой</h3>
-            <p>Тебе не нужно быть кем-то другим. Твои маленькие странности — часть твоего очарования.</p>
+            <p>Тебе не нужно быть кем-то другим. Твои маленькие странности — часть веселья.</p>
             <span class="flip-hint">нажми, чтобы открыть</span>
           </div>
           <div class="note-back"></div>
@@ -294,77 +297,70 @@
 </section>
 
 <section>
-  <div class="card gift-wrap reveal">
-    <div class="mini">И ещё кое-что...</div>
-    <div class="gift" id="giftEl" onclick="openGift()" aria-label="Open gift">🎁</div>
-    <div class="hint" id="giftHint">Нажми на подарок 🎁</div>
+  <div class="card gift-wrap reveal" id="giftCard">
+    <div class="mini">One last thing...</div>
+    <div class="gift" id="giftEl" aria-label="Open gift" role="button" tabindex="0">🎁</div>
+    <div class="hint" id="giftHint">Tap the gift 🎁</div>
 
     <div class="surprise" id="surprise">
-      <h2>Ты нашла секрет! 💕</h2>
+      <div class="cat-wrap">
+        <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" aria-label="A cute black cat">
+          <ellipse cx="110" cy="205" rx="55" ry="8" fill="#e0c9e8" opacity=".4"/>
+          <path class="cat-tail" d="M158 190 C 205 185, 210 130, 178 108" stroke="#20161f" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <ellipse cx="110" cy="165" rx="58" ry="42" fill="#221520"/>
+          <ellipse cx="110" cy="178" rx="30" ry="20" fill="#3a2a3b"/>
+          <ellipse cx="70" cy="188" rx="12" ry="9" fill="#221520"/>
+          <ellipse cx="150" cy="188" rx="12" ry="9" fill="#221520"/>
+          <path d="M62 78 L48 32 L92 62 Z" fill="#221520"/>
+          <path d="M158 78 L172 32 L128 62 Z" fill="#221520"/>
+          <path d="M66 70 L58 44 L84 60 Z" fill="#ff9fcb"/>
+          <path d="M154 70 L162 44 L136 60 Z" fill="#ff9fcb"/>
+          <circle cx="110" cy="105" r="62" fill="#221520"/>
+          <ellipse cx="110" cy="122" rx="34" ry="24" fill="#3a2a3b"/>
+          <ellipse cx="86" cy="100" rx="9" ry="11" fill="#fff"/>
+          <ellipse cx="134" cy="100" rx="9" ry="11" fill="#fff"/>
+          <path d="M80 98 Q86 90 92 98" stroke="#221520" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M128 98 Q134 90 140 98" stroke="#221520" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <ellipse cx="75" cy="118" rx="10" ry="6" fill="#ffb6d5" opacity=".7"/>
+          <ellipse cx="145" cy="118" rx="10" ry="6" fill="#ffb6d5" opacity=".7"/>
+          <path d="M110 112 L104 122 L116 122 Z" fill="#ff9fcb"/>
+          <path d="M110 122 Q110 129 102 130" stroke="#221520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M110 122 Q110 129 118 130" stroke="#221520" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <g stroke="#e9defb" stroke-width="2" stroke-linecap="round">
+            <path d="M46 108 L18 102"/>
+            <path d="M46 118 L16 120"/>
+            <path d="M46 128 L18 136"/>
+            <path d="M174 108 L202 102"/>
+            <path d="M174 118 L204 120"/>
+            <path d="M174 128 L202 136"/>
+          </g>
+          <path d="M92 165 Q110 178 128 165" stroke="#ff6fa5" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <circle cx="110" cy="165" r="4" fill="#ff6fa5"/>
+        </svg>
+      </div>
+      <h2>You found the secret! 💕</h2>
       <p>
-        Расстояние — забавная вещь. Оно может разделять друзей целыми странами,
-        но добрым пожеланиям расстояние не помеха.
-        Поэтому вот одно пожелание, которое летит к тебе прямо из Индии:
-        <strong>Пусть твой день рождения будет просто чудесным, Маргреета!</strong>
+        Distance is a funny thing. It can put countries between two friends,
+        but it doesn't have to put distance between good wishes.
+        So here's one travelling all the way from India to you:
+        <strong>have an absolutely lovely birthday, Margreeta!</strong>
+      </p>
+      <p class="rus" style="margin-top:10px">
+        Пусть этот день будет мягким, как кошачьи лапки, и таким же тёплым, как твоя улыбка. 🐾
       </p>
       <p style="margin-top:14px">
-        Пусть сегодняшний день подарит тебе сотню маленьких поводов для улыбки. 🎈✨
+        May today give you a hundred tiny reasons to smile. 🎈✨
       </p>
     </div>
   </div>
 </section>
 
 <footer>
-  Сделано с помощью немного HTML, CSS, JavaScript и огромной дружбы. 💖
+  Made with a little HTML, CSS, JavaScript & a lot of friendship. 💖
 </footer>
 </main>
 
 <script>
-/* ===== time lock: unlock only at/after 9 Sep 2026, 16:00 (device local time) ===== */
-const UNLOCK_AT = new Date(2026, 8, 11, 0, 0, 0, 0).getTime(); // months are 0-indexed: 8 = September (11 Sep, 12:00 AM)
-
-function pad(n){ return String(n).padStart(2,'0'); }
-
-function updateLockTimer(){
-  const now = Date.now();
-  const diff = UNLOCK_AT - now;
-
-  if(diff <= 0){
-    unlockPage();
-    return;
-  }
-
-  const totalSeconds = Math.floor(diff/1000);
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  document.getElementById('lockDays').textContent = pad(days);
-  document.getElementById('lockHours').textContent = pad(hours);
-  document.getElementById('lockMinutes').textContent = pad(minutes);
-  document.getElementById('lockSeconds').textContent = pad(seconds);
-}
-
-let lockInterval = null;
-let pageUnlocked = false;
-function unlockPage(){
-  if(pageUnlocked) return;
-  pageUnlocked = true;
-  if(lockInterval) clearInterval(lockInterval);
-  const overlay = document.getElementById('lockOverlay');
-  if(overlay) overlay.remove();
-  document.getElementById('sky').classList.remove('page-hidden');
-  document.getElementById('mainPage').classList.remove('page-hidden');
-  initPageEffects();
-}
-
-updateLockTimer();
-lockInterval = setInterval(updateLockTimer, 1000);
-
-/* everything below only runs once the page is actually unlocked */
-function initPageEffects(){
-
 /* custom cursor */
 const dot = document.getElementById('cursorDot');
 let lastSpark = 0;
@@ -383,6 +379,36 @@ window.addEventListener('pointermove', e=>{
     setTimeout(()=>s.remove(),800);
   }
 });
+
+/* twinkling stars */
+const starlayer = document.getElementById('starlayer');
+for(let i=0;i<40;i++){
+  const st = document.createElement('div');
+  st.className='star';
+  const size = 1+Math.random()*2;
+  st.style.width = size+'px';
+  st.style.height = size+'px';
+  st.style.left = (Math.random()*100)+'vw';
+  st.style.top = (Math.random()*100)+'vh';
+  st.style.animationDelay = (Math.random()*2.6)+'s';
+  starlayer.appendChild(st);
+}
+
+/* gentle snowfall */
+const snowlayer = document.getElementById('snowlayer');
+const flakeChars = ["❄","❅","❆","·"];
+for(let i=0;i<26;i++){
+  const f = document.createElement('div');
+  f.className='flake';
+  f.textContent = flakeChars[Math.floor(Math.random()*flakeChars.length)];
+  f.style.left = (Math.random()*100)+'vw';
+  f.style.fontSize = (0.6+Math.random()*1.2)+'rem';
+  f.style.opacity = (0.3+Math.random()*0.5).toFixed(2);
+  f.style.setProperty('--drift',(Math.random()*80-40)+'px');
+  f.style.animationDuration = (9+Math.random()*10)+'s';
+  f.style.animationDelay = (Math.random()*10)+'s';
+  snowlayer.appendChild(f);
+}
 
 /* balloons */
 const sky = document.getElementById('sky');
@@ -426,24 +452,36 @@ function typeStep(){
 }
 setTimeout(typeStep, 500);
 
-/* scroll reveal */
+/* scroll reveal, with a safety fallback so nothing stays invisible */
 const revealEls = document.querySelectorAll('.reveal');
 const io = new IntersectionObserver((entries)=>{
   entries.forEach(en=>{
     if(en.isIntersecting){ en.target.classList.add('show'); io.unobserve(en.target); }
   });
-}, {threshold:0.2});
-revealEls.forEach(el=>io.observe(el));
+}, {threshold:0.15});
+revealEls.forEach(el=>{
+  io.observe(el);
+  const rect = el.getBoundingClientRect();
+  if(rect.top < window.innerHeight){ el.classList.add('show'); }
+});
 
 /* candle blow */
 const blowBtn = document.getElementById('blowBtn');
 const flameEmoji = document.getElementById('flameEmoji');
+const flameGlow = document.getElementById('flameGlow');
 const wishText = document.getElementById('wishText');
+const smoke1 = document.getElementById('smoke1');
+const smoke2 = document.getElementById('smoke2');
 blowBtn.addEventListener('click', ()=>{
   flameEmoji.classList.add('out');
+  flameGlow.classList.add('out');
   blowBtn.disabled = true;
   blowBtn.style.opacity = .5;
-  blowBtn.textContent = 'Желание запечатано 🕊';
+  blowBtn.textContent = 'Wish sealed 🕊';
+  smoke1.style.setProperty('--sx','-14px');
+  smoke2.style.setProperty('--sx','10px');
+  smoke1.classList.add('go');
+  setTimeout(()=>smoke2.classList.add('go'), 250);
   setTimeout(()=> wishText.classList.add('show'), 400);
   confettiBurst(24);
 });
@@ -455,19 +493,28 @@ document.querySelectorAll('.note').forEach(note=>{
   note.addEventListener('click', ()=> note.classList.toggle('flipped'));
 });
 
-/* gift */
+/* gift — bound robustly (click + keyboard), independent of scroll-reveal state */
 let giftOpened = false;
 function openGift(){
   if(giftOpened) return;
   giftOpened = true;
   const gift = document.getElementById('giftEl');
+  const giftCard = document.getElementById('giftCard');
+  giftCard.classList.add('show');
   gift.classList.add('shake');
   document.getElementById('giftHint').textContent = '';
   setTimeout(()=>{
+    gift.classList.add('opened');
     document.getElementById("surprise").classList.add("show");
     confettiBurst(90);
+    fireworksBurst(6);
   }, 450);
 }
+const giftEl = document.getElementById('giftEl');
+giftEl.addEventListener('click', openGift);
+giftEl.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openGift(); }
+});
 
 function confettiBurst(count){
   const colors=["#ff9fcb","#c3b4ff","#9de3ff","#ffd699","#ff6fa5"];
@@ -484,7 +531,30 @@ function confettiBurst(count){
   }
 }
 
-} /* end initPageEffects */
+/* firework bursts for the big reveal */
+function fireworksBurst(bursts){
+  const colors=["#ff9fcb","#c3b4ff","#9de3ff","#ffd699","#ff6fa5","#b6ffcf"];
+  for(let b=0;b<bursts;b++){
+    setTimeout(()=>{
+      const fx = 10 + Math.random()*80;
+      const fy = 15 + Math.random()*45;
+      const particles = 16;
+      for(let i=0;i<particles;i++){
+        const p = document.createElement('div');
+        p.className='firework';
+        const angle = (Math.PI*2*i)/particles;
+        const dist = 40+Math.random()*40;
+        p.style.setProperty('--fx', fx+'vw');
+        p.style.setProperty('--fy', fy+'vh');
+        p.style.setProperty('--tx', Math.cos(angle)*dist+'px');
+        p.style.setProperty('--ty', Math.sin(angle)*dist+'px');
+        p.style.background = colors[Math.floor(Math.random()*colors.length)];
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),1000);
+      }
+    }, b*220);
+  }
+}
 </script>
 </body>
 </html>
