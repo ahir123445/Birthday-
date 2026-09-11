@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>С днём рождения, Маргреета! 💖</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    min-height:100vh;
+    font-family:"Trebuchet MS",system-ui,sans-serif;
+    color:#4a3150;
+    background:linear-gradient(135deg,#fff1f8 0%,#f4edff 48%,#e9f7ff 100%);
+    overflow-x:hidden;
+    cursor:none;
+  }
+  button{font:inherit}
+  a{color:inherit}
+
+  /* custom cursor + sparkle trail */
+  .cursor-dot{
+    position:fixed;width:16px;height:16px;border-radius:50%;
+    background:radial-gradient(circle,#ff9fcb,#e85b9b);
+    pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+    transition:width .15s,height .15s,opacity .2s;
+    box-shadow:0 0 12px rgba(232,91,155,.6);
+  }
+  @media(hover:none){ body{cursor:auto} .cursor-dot{display:none} }
+  .spark{
+    position:fixed;pointer-events:none;z-index:9998;font-size:14px;
+    animation:sparkfade .8s ease forwards;
+  }
+  @keyframes sparkfade{
+    from{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+    to{opacity:0;transform:translate(-50%,-50%) scale(.3) translateY(-24px) rotate(90deg)}
+  }
+
+  .sky{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+  .bubble{
+    position:absolute;border-radius:50%;opacity:.45;
+    animation:float 10s ease-in-out infinite;
+  }
+  .bubble:nth-child(1){width:90px;height:90px;background:#ffd6e8;left:5%;top:12%}
+  .bubble:nth-child(2){width:140px;height:140px;background:#ddd2ff;right:5%;top:18%;animation-delay:2s}
+  .bubble:nth-child(3){width:70px;height:70px;background:#cceeff;left:14%;bottom:10%;animation-delay:4s}
+  .bubble:nth-child(4){width:110px;height:110px;background:#ffe4b8;right:14%;bottom:7%;animation-delay:1s}
+  @keyframes float{50%{transform:translateY(-25px) scale(1.06)}}
+
+  .balloon{
+    position:absolute;bottom:-140px;font-size:2.6rem;opacity:0;
+    animation-name:balloonrise;animation-timing-function:ease-in;animation-iteration-count:infinite;
+  }
+  @keyframes balloonrise{
+    0%{transform:translateY(0) translateX(0) rotate(-4deg);opacity:0}
+    10%{opacity:.85}
+    50%{transform:translateY(-55vh) translateX(var(--bx,15px)) rotate(4deg)}
+    90%{opacity:.7}
+    100%{transform:translateY(-115vh) translateX(calc(var(--bx,15px)*-1)) rotate(-4deg);opacity:0}
+  }
+
+  .page{position:relative;z-index:1}
+  section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:50px 20px}
+  .hero{text-align:center}
+  .mini{font-size:.95rem;letter-spacing:3px;text-transform:uppercase;color:#9b6fa1;margin-bottom:18px}
+  h1{
+    font-size:clamp(3rem,12vw,7rem);line-height:.95;
+    color:#e85b9b;text-shadow:4px 5px 0 rgba(255,255,255,.85);
+    animation:pop .9s cubic-bezier(.2,.9,.3,1.3);
+  }
+  @keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+  .hero p{max-width:650px;margin:25px auto;font-size:1.2rem;line-height:1.7;min-height:3.4em}
+  .typewrite::after{
+    content:"";display:inline-block;width:2px;height:1.1em;background:#e85b9b;
+    margin-left:2px;vertical-align:-2px;animation:blink 1s step-end infinite;
+  }
+  @keyframes blink{50%{opacity:0}}
+
+  .btn{
+    border:0;border-radius:999px;padding:15px 26px;cursor:pointer;
+    background:#e85b9b;color:#fff;font-weight:800;
+    box-shadow:0 8px 20px rgba(232,91,155,.25);
+    transition:.25s;
+  }
+  .btn:hover{transform:translateY(-3px) scale(1.03)}
+  .hint{margin-top:16px;font-size:.85rem;color:#997f9d}
+
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.show{opacity:1;transform:none}
+
+  .card{
+    width:min(900px,100%);background:rgba(255,255,255,.78);
+    border:2px solid rgba(255,255,255,.9);border-radius:30px;
+    padding:38px;box-shadow:0 20px 60px rgba(91,61,105,.12);
+    backdrop-filter:blur(10px);
+  }
+  .title{text-align:center;font-size:clamp(2rem,6vw,3.6rem);color:#7654a5;margin-bottom:16px}
+  .intro{text-align:center;line-height:1.8;font-size:1.08rem}
+  .rus{margin-top:12px;color:#a45c83;font-weight:700;text-align:center}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
+  .note{
+    background:#fff;border-radius:22px;padding:25px 20px;text-align:center;
+    min-height:190px;display:flex;flex-direction:column;justify-content:center;
+    box-shadow:0 10px 25px rgba(70,50,80,.08);
+    transition:.25s;cursor:pointer;
+    perspective:800px;
+  }
+  .note:hover{transform:translateY(-7px) rotate(-1deg)}
+  .note:nth-child(2):hover{transform:translateY(-7px) rotate(1deg)}
+  .note-inner{transition:transform .6s cubic-bezier(.3,.7,.3,1.2)}
+  .note.flipped .note-inner{transform:rotateY(180deg)}
+  .note-front,.note-back{backface-visibility:hidden}
+  .note-back{
+    position:absolute;inset:25px 20px;transform:rotateY(180deg);
+    display:flex;align-items:center;justify-content:center;
+    font-size:.92rem;line-height:1.55;color:#7654a5;font-weight:700;
+  }
+  .note-inner{position:relative}
+  .emoji{font-size:3rem;margin-bottom:12px}
+  .note h3{color:#d45b91;margin-bottom:9px}
+  .note p{line-height:1.55;font-size:.95rem}
+  .flip-hint{display:block;margin-top:10px;font-size:.72rem;color:#c090c5;letter-spacing:1px}
+
+  /* candle wish section */
+  .candle-wrap{display:flex;flex-direction:column;align-items:center}
+  .cake{font-size:5.5rem;position:relative;display:inline-block}
+  .flame-emoji{
+    position:absolute;top:-6px;left:50%;transform:translateX(-50%);font-size:1.6rem;
+    animation:flick 1.2s ease-in-out infinite;transition:opacity .5s ease,transform .5s ease;
+  }
+  @keyframes flick{0%,100%{transform:translateX(-50%) scale(1) rotate(-4deg)}50%{transform:translateX(-50%) scale(1.15) rotate(4deg)}}
+  .flame-emoji.out{opacity:0;transform:translateX(-50%) translateY(-16px) scale(.2)}
+  .wish-text{margin-top:22px;font-size:1.1rem;color:#a45c83;font-weight:700;min-height:1.6em;opacity:0;transition:opacity .6s ease}
+  .wish-text.show{opacity:1}
+
+  .gift-wrap{text-align:center}
+  .gift{font-size:8rem;cursor:pointer;filter:drop-shadow(0 14px 10px rgba(80,50,90,.12));transition:.3s;display:inline-block}
+  .gift:hover{transform:translateY(-10px) rotate(4deg)}
+  .gift.shake{animation:shake .5s ease}
+  @keyframes shake{
+    0%,100%{transform:rotate(0)}
+    20%{transform:rotate(-8deg)}
+    40%{transform:rotate(8deg)}
+    60%{transform:rotate(-6deg)}
+    80%{transform:rotate(6deg)}
+  }
+  .surprise{display:none;margin:22px auto 0;max-width:650px;animation:reveal .6s ease}
+  .surprise.show{display:block}
+  @keyframes reveal{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+  .surprise h2{font-size:2rem;color:#e85b9b;margin-bottom:12px}
+  .surprise p{line-height:1.8}
+
+  footer{text-align:center;padding:35px 20px;color:#947e99;font-size:.9rem}
+  .heart{position:fixed;bottom:-30px;font-size:22px;pointer-events:none;z-index:10;animation:rise 4s linear forwards}
+  @keyframes rise{to{transform:translateY(-110vh) rotate(360deg);opacity:0}}
+  .confetti{position:fixed;width:9px;height:14px;top:-20px;z-index:20;pointer-events:none;animation:fall 3s linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+  @media(max-width:700px){
+    body{cursor:auto}
+    .cursor-dot,.spark{display:none}
+    section{padding:35px 16px}
+    .card{padding:25px 18px;border-radius:24px}
+    .grid{grid-template-columns:1fr}
+    .note{min-height:150px}
+    .hero p{font-size:1rem}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  }
+
+  /* ===== time lock overlay ===== */
+  #lockOverlay{
+    position:fixed;inset:0;z-index:99999;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#fff1f8 0%,#f4edff 48%,#e9f7ff 100%);
+    text-align:center;padding:20px;
+  }
+  #lockOverlay .lockCard{
+    background:rgba(255,255,255,.85);border:2px solid rgba(255,255,255,.9);
+    border-radius:26px;padding:40px 30px;max-width:480px;width:100%;
+    box-shadow:0 20px 60px rgba(91,61,105,.14);backdrop-filter:blur(10px);
+  }
+  #lockOverlay .lockEmoji{font-size:3rem;margin-bottom:10px}
+  #lockOverlay h2{color:#e85b9b;font-size:clamp(1.3rem,5vw,1.8rem);margin-bottom:10px}
+  #lockOverlay p{color:#7654a5;font-size:.95rem;margin-bottom:20px;line-height:1.6}
+  #lockTimer{
+    display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+  }
+  #lockTimer .unit{min-width:64px}
+  #lockTimer .num{
+    font-size:clamp(1.6rem,6vw,2.4rem);font-weight:800;color:#e85b9b;
+    background:#fff;border-radius:14px;padding:10px 6px;
+    box-shadow:0 8px 18px rgba(232,91,155,.18);display:block;
+  }
+  #lockTimer .lbl{display:block;margin-top:6px;font-size:.72rem;letter-spacing:1px;
+    text-transform:uppercase;color:#9b6fa1}
+  .page-hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="lockOverlay">
+  <div class="lockCard">
+    <div class="lockEmoji">🔒🎂</div>
+    <h2>Ещё чуть-чуть...</h2>
+    <p>Сюрприз откроется автоматически:<br>11 сентября 2026, 00:00</p>
+    <div id="lockTimer">
+      <div class="unit"><span class="num" id="lockDays">00</span><span class="lbl">дни</span></div>
+      <div class="unit"><span class="num" id="lockHours">00</span><span class="lbl">часы</span></div>
+      <div class="unit"><span class="num" id="lockMinutes">00</span><span class="lbl">мин</span></div>
+      <div class="unit"><span class="num" id="lockSeconds">00</span><span class="lbl">сек</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="sky page-hidden" id="sky">
+  <span class="bubble"></span><span class="bubble"></span><span class="bubble"></span><span class="bubble"></span>
+</div>
+
+<main class="page page-hidden" id="mainPage">
+<section class="hero">
+  <div>
+    <div class="mini">Маленький сюрприз из Индии 🇮🇳 → 🇷🇺</div>
+    <h1>С днём рождения,<br>Маргреета! 🎂</h1>
+    <p id="typewriteTarget" class="typewrite"></p>
+    <button class="btn" onclick="document.getElementById('candle').scrollIntoView()">Открыть сюрприз ✨</button>
+    <div class="hint">Ниже тебя ждут несколько маленьких сюрпризов ↓</div>
+  </div>
+</section>
+
+<section id="candle">
+  <div class="card reveal">
+    <h2 class="title" style="font-size:clamp(1.6rem,5vw,2.4rem)">Сначала загадай желание 🕯️</h2>
+    <p class="intro">Задуй свечку, прежде чем листать дальше.</p>
+    <div class="candle-wrap" style="margin-top:26px">
+      <div class="cake">🎂<span class="flame-emoji" id="flameEmoji">🔥</span></div>
+      <button class="btn" id="blowBtn" style="margin-top:26px">Задуть свечку</button>
+      <div class="wish-text" id="wishText">Желание загадано — пусть оно сбудется. 💫</div>
+    </div>
+  </div>
+</section>
+
+<section id="message">
+  <div class="card reveal">
+    <h2 class="title">Для замечательного друга 🌷</h2>
+    <p class="intro">
+      Happy Birthday, Margreeta! I hope your new year is filled with
+      laughter, peaceful days, exciting adventures, and lots of little
+      moments that make you smile.
+    </p>
+    <p class="rus">
+      С днём рождения, Маргреета! 🎉 Пусть этот год принесёт тебе много
+      радости, улыбок и красивых моментов!
+    </p>
+
+    <div class="grid">
+      <div class="note" data-secret="Здесь я признаюсь: обычный день становится лучше просто от мысли, что ты есть в моей жизни. 🌟">
+        <div class="note-inner">
+          <div class="note-front">
+            <div class="emoji">🌟</div>
+            <h3>Продолжай сиять</h3>
+            <p>Никогда не забывай, как твоё присутствие может сделать обычный день особенным.</p>
+            <span class="flip-hint">нажми, чтобы открыть</span>
+          </div>
+          <div class="note-back"></div>
+        </div>
+      </div>
+      <div class="note" data-secret="Твои особенные странности — именно то, что делает нашу дружбу такой классной. Никогда не меняйся. 🧸">
+        <div class="note-inner">
+          <div class="note-front">
+            <div class="emoji">🧸</div>
+            <h3>Оставайся собой</h3>
+            <p>Тебе не нужно быть кем-то другим. Твои маленькие странности — часть твоего очарования.</p>
+            <span class="flip-hint">нажми, чтобы открыть</span>
+          </div>
+          <div class="note-back"></div>
+        </div>
+      </div>
+      <div class="note" data-secret="За ещё больше наших шуток, неожиданных звонков и поводов для праздника. 🌈">
+        <div class="note-inner">
+          <div class="note-front">
+            <div class="emoji">🌈</div>
+            <h3>Больше счастливых дней</h3>
+            <p>Пусть у тебя будет ещё больше поводов смеяться, исследовать мир и мечтать по-крупному.</p>
+            <span class="flip-hint">нажми, чтобы открыть</span>
+          </div>
+          <div class="note-back"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="card gift-wrap reveal">
+    <div class="mini">И ещё кое-что...</div>
+    <div class="gift" id="giftEl" onclick="openGift()" aria-label="Open gift">🎁</div>
+    <div class="hint" id="giftHint">Нажми на подарок 🎁</div>
+
+    <div class="surprise" id="surprise">
+      <h2>Ты нашла секрет! 💕</h2>
+      <p>
+        Расстояние — забавная вещь. Оно может разделять друзей целыми странами,
+        но добрым пожеланиям расстояние не помеха.
+        Поэтому вот одно пожелание, которое летит к тебе прямо из Индии:
+        <strong>Пусть твой день рождения будет просто чудесным, Маргреета!</strong>
+      </p>
+      <p style="margin-top:14px">
+        Пусть сегодняшний день подарит тебе сотню маленьких поводов для улыбки. 🎈✨
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Сделано с помощью немного HTML, CSS, JavaScript и огромной дружбы. 💖
+</footer>
+</main>
+
+<script>
+/* ===== time lock: unlock only at/after 9 Sep 2026, 16:00 (device local time) ===== */
+const UNLOCK_AT = new Date(2026, 8, 11, 0, 0, 0, 0).getTime(); // months are 0-indexed: 8 = September (11 Sep, 12:00 AM)
+
+function pad(n){ return String(n).padStart(2,'0'); }
+
+function updateLockTimer(){
+  const now = Date.now();
+  const diff = UNLOCK_AT - now;
+
+  if(diff <= 0){
+    unlockPage();
+    return;
+  }
+
+  const totalSeconds = Math.floor(diff/1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  document.getElementById('lockDays').textContent = pad(days);
+  document.getElementById('lockHours').textContent = pad(hours);
+  document.getElementById('lockMinutes').textContent = pad(minutes);
+  document.getElementById('lockSeconds').textContent = pad(seconds);
+}
+
+let lockInterval = null;
+let pageUnlocked = false;
+function unlockPage(){
+  if(pageUnlocked) return;
+  pageUnlocked = true;
+  if(lockInterval) clearInterval(lockInterval);
+  const overlay = document.getElementById('lockOverlay');
+  if(overlay) overlay.remove();
+  document.getElementById('sky').classList.remove('page-hidden');
+  document.getElementById('mainPage').classList.remove('page-hidden');
+  initPageEffects();
+}
+
+updateLockTimer();
+lockInterval = setInterval(updateLockTimer, 1000);
+
+/* everything below only runs once the page is actually unlocked */
+function initPageEffects(){
+
+/* custom cursor */
+const dot = document.getElementById('cursorDot');
+let lastSpark = 0;
+window.addEventListener('pointermove', e=>{
+  dot.style.left = e.clientX+'px';
+  dot.style.top = e.clientY+'px';
+  const now = Date.now();
+  if(now-lastSpark > 90){
+    lastSpark = now;
+    const s = document.createElement('div');
+    s.className='spark';
+    s.textContent = ["✨","💫","🌸","💗"][Math.floor(Math.random()*4)];
+    s.style.left = e.clientX+'px';
+    s.style.top = e.clientY+'px';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),800);
+  }
+});
+
+/* balloons */
+const sky = document.getElementById('sky');
+const balloonEmojis = ["🎈","🎈","🎈","💗"];
+for(let i=0;i<10;i++){
+  const b = document.createElement('div');
+  b.className='balloon';
+  b.textContent = balloonEmojis[Math.floor(Math.random()*balloonEmojis.length)];
+  b.style.left = (Math.random()*94)+'vw';
+  b.style.setProperty('--bx',(Math.random()*80-40)+'px');
+  b.style.animationDuration = (9+Math.random()*7)+'s';
+  b.style.animationDelay = (Math.random()*12)+'s';
+  b.style.fontSize = (2+Math.random()*1.6)+'rem';
+  sky.appendChild(b);
+}
+
+/* floating hearts (background ambience) */
+function heart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.textContent=["💖","💗","💕","✨","🌸"][Math.floor(Math.random()*5)];
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=(3+Math.random()*2)+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),5000);
+}
+setInterval(heart,700);
+
+/* typewriter subtitle */
+const fullText = "Сегодня настоящий подарок не смог преодолеть расстояние, поэтому я создал для тебя маленький уголок в интернете. 💗";
+const twEl = document.getElementById('typewriteTarget');
+let twIndex = 0;
+function typeStep(){
+  if(twIndex <= fullText.length){
+    twEl.textContent = fullText.slice(0, twIndex);
+    twIndex++;
+    setTimeout(typeStep, 28);
+  } else {
+    twEl.classList.remove('typewrite');
+  }
+}
+setTimeout(typeStep, 500);
+
+/* scroll reveal */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){ en.target.classList.add('show'); io.unobserve(en.target); }
+  });
+}, {threshold:0.2});
+revealEls.forEach(el=>io.observe(el));
+
+/* candle blow */
+const blowBtn = document.getElementById('blowBtn');
+const flameEmoji = document.getElementById('flameEmoji');
+const wishText = document.getElementById('wishText');
+blowBtn.addEventListener('click', ()=>{
+  flameEmoji.classList.add('out');
+  blowBtn.disabled = true;
+  blowBtn.style.opacity = .5;
+  blowBtn.textContent = 'Желание запечатано 🕊';
+  setTimeout(()=> wishText.classList.add('show'), 400);
+  confettiBurst(24);
+});
+
+/* flip notes */
+document.querySelectorAll('.note').forEach(note=>{
+  const back = note.querySelector('.note-back');
+  back.textContent = note.dataset.secret;
+  note.addEventListener('click', ()=> note.classList.toggle('flipped'));
+});
+
+/* gift */
+let giftOpened = false;
+function openGift(){
+  if(giftOpened) return;
+  giftOpened = true;
+  const gift = document.getElementById('giftEl');
+  gift.classList.add('shake');
+  document.getElementById('giftHint').textContent = '';
+  setTimeout(()=>{
+    document.getElementById("surprise").classList.add("show");
+    confettiBurst(90);
+  }, 450);
+}
+
+function confettiBurst(count){
+  const colors=["#ff9fcb","#c3b4ff","#9de3ff","#ffd699","#ff6fa5"];
+  for(let i=0;i<count;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDelay=(Math.random()*.7)+"s";
+    c.style.transform="rotate("+Math.random()*360+"deg)";
+    c.style.borderRadius=Math.random()>.5?"50%":"2px";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3800);
+  }
+}
+
+} /* end initPageEffects */
+</script>
+</body>
+</html>
